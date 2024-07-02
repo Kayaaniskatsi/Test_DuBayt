@@ -1,0 +1,46 @@
+#include <iostream>
+#include <stdexcept>
+
+using namespace std;
+
+//Рекурсивная функция подсчета количества различных п-значных номеров с суммой цифр = k
+unsigned long long recCountSum(unsigned int k, unsigned int n, unsigned int base)
+{
+if (n == 1)
+    if (k < base) return 1; else return 0;
+    
+unsigned long long counter = 0;
+for (int l = 0; l < base; l++)
+    counter += recCountSum(k - l, n - 1, base);
+    
+return counter;
+}
+
+//Функция подсчета количества красивых чисел:
+//n - количество цифр в числах; base - система счисления
+unsigned long long getNumOfBeauty(unsigned int n, unsigned int base)
+{
+//Обработка ошибок
+if (n < 1 || base < 2) throw runtime_error("Использованы недопустимые значения");
+
+//Обработка нестандартного случая, где n = 1
+if (n == 1) return base;
+
+//Обработка стандартного случая
+unsigned long long sum = 0;
+for (unsigned int k = 0; k <= (base - 1) * n / 2; k++)
+{
+    unsigned long long r = recCountSum(k, n / 2, base);
+    sum += r * r;
+}
+
+//Вывод
+if (n % 2) return sum * base; else return sum;
+}
+
+//Функция печати количества красивых чисел из 13 цифр в 13-ой системе
+int main()
+{
+cout << getNumOfBeauty(13, 13) << endl;
+return 0;
+}
